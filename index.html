@@ -12,17 +12,15 @@
         <h1 class="page-title">TASKINATOR</h1>
         <p>Click the button below to add a new task!</p>
 
-        <!-- <form> element with an id attribute-->
-        <!-- will use this id attribute in JavaScript code-->
         <form id="task-form">
-            
+        <!-- <form> element with an id attribute-->
+        <!-- will use this id attribute in JavaScript code-->   
+            <div class="form-group">
             <!-- will wrap all form elements with this <div> to make styling it easier.--> 
             <!-- wrap HTML elements in container elements whose sole purpose is to handle where they go on the page.-->
-
-            <div class="form-group">
+                <input type="text" name="task-name" class="text-input" placeholder="Enter Task Name" />
                 <!--add an <input> element to capture our task's name-->
                 <!--used name attribute to identify the form input & use it to select element with querySelector() method in js-->
-                <input type="text" name="task-name" class="text-input" placeholder="Enter Task Name" />
             </div>
             <div class="form-group">
                     <!--<select> element to tell the browser we're about to create this type of dropdown list,-->
@@ -42,6 +40,7 @@
                 <button class="btn" id="save-task" type="submit">Add Task</button>
             </div>
         </form>
+
     </header>
    
 
