@@ -3,7 +3,7 @@ var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
 // function to dynamically create the task item
-var createTaskHandler = function(event) {
+var taskFormHandler = function(event) {
 
   event.preventDefault();
   // to prevent browser from default behaviour of refreshing page
@@ -29,4 +29,4 @@ var createTaskHandler = function(event) {
 };
 
 /* an event listener statment = "on submit, create a task" targeting the form element */
-formEl.addEventListener("submit", createTaskHandler);
+formEl.addEventListener("submit", taskFormHandler);
