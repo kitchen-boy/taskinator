@@ -18,7 +18,7 @@ var taskFormHandler = function(event) {
     alert("You need to fill out the task form!");
     return false;
   }
-  
+  // to reset form after submitting task
   formEl.reset();
 
   // package up data as an object
