@@ -5,7 +5,11 @@ var taskIdCounter = 0;
 
 // to listen to an event happening on entire form
 var formEl = document.querySelector("#task-form");
+
+// variables to reference the 3 columms: Tasks To Do, Tasks In Progress, Tasks Complete
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var tasksInProgressEl = document.querySelector("#tasks-in-progress");
+var tasksCompletedEl = document.querySelector("#tasks-completed");
 
 // function to dynamically create the task item
 var taskFormHandler = function(event) {
@@ -208,5 +212,42 @@ var completeEditTask = function(taskName, taskType, taskId) {
   formEl.removeAttribute("data-task-id");
   document.querySelector("#save-task").textContent = "Add Task";
 }
+
+//function to move task between columns based on status
+var taskStatusChangeHandler = function(event) {
+  //console.log(event.target);
+  //console.log(event.target.getAttribute("data-task-id"));
+  
+  // get the task item's id
+  var taskId = event.target.getAttribute("data-task-id");
+  
+  // get the currently selected option's value and convert to lowercase
+  var statusValue = event.target.value.toLowerCase();
+  
+  // find the parent task item element based on the id
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+  if (statusValue === "to do") {
+    tasksToDoEl.appendChild(taskSelected);
+    // statusValue referred to at top of page:  var tasksToDoEl = document.querySelector("#tasks-to-do");
+  }
+
+  else if (statusValue === "in progress") {
+    tasksInProgressEl.appendChild(taskSelected);
+  }
+
+  else if (statusValue === "completed") {
+    tasksCompletedEl.appendChild(taskSelected);
+  // tasksToDoEl, taskInProgressEl, tasksCompleted = references to the <ul> elements
+  /* if the user selects "In Progress" from the dropdown,
+  it will append the current task item to the <ul id="tasks-in-progress"> element 
+  with the tasksInProgressEl.appendChild(taskSelected) method. 
+  i.e. appendChild() moved task item from its original location in the DOM into the other <ul>  */
+  }
+
+};
+
+
 // event listener for page-content element at top
 pageContentEl.addEventListener("click", taskButtonHandler);
+pageContentEl.addEventListener("change", taskStatusChangeHandler);
