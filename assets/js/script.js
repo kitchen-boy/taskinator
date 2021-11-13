@@ -125,7 +125,18 @@ formEl.addEventListener("submit", taskFormHandler);
 
 var taskButtonHandler = function(event) {
   
-  if (event.target.matches(".delete-btn")) {
+  // get target element from event
+  var targetEl = event.target;
+
+  // edit button was clicked
+  if (targetEl.matches(".edit-btn")) {
+  //use event delegation and matches() method to check class name
+    var taskId = event.target.getAttribute("data-task-id");
+    editTask(taskId);
+  }
+
+  // delete button was clicked
+  else (targetEl.matches(".delete-btn")) {
     // get the element's task id by getting HTML attribute "data-task-id"
     //the "data-task-id" attribute was applied to both Delete button & task's <li> element
     var taskId = event.target.getAttribute("data-task-id");
