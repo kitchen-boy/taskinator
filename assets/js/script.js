@@ -71,7 +71,7 @@ var createTaskEl = function(taskDataObj) {
 // this function returns a DOM element that can be stored in a variable i.e.,(taskActionsEl)
 var createTaskActions = function(taskId) {
   var actionContainerEl = document.createElement("div");
-  actionContainerEl.classname = "task-actions";
+  actionContainerEl.className = "task-actions";
 
   //create edit button
   var editButtonEl = document.createElement("button");
@@ -88,7 +88,8 @@ var createTaskActions = function(taskId) {
   deleteButtonEl.textContent = "Delete";
   deleteButtonEl.className = "btn delete-btn";
   deleteButtonEl.setAttribute("data-task-id", taskId);
-
+  // using querySelector() with a selector like .task-item[data-task-id='0'] allowed us to find a different element with the same data-task-id attribute. 
+  // selected element by its class name "data-task-id"and then checking to see if it also has the specific data attribute value.
   actionContainerEl.appendChild(deleteButtonEl);
  
   var statusSelectEl = document.createElement("select");
