@@ -1,3 +1,5 @@
+var pageContentEl = document.querySelector("#page-content");
+
 // variable to create an id to the current task being created
 var taskIdCounter = 0;
 
@@ -119,3 +121,16 @@ var createTaskActions = function(taskId) {
 };
 /* an event listener statment = "on submit, create a task" targeting the form element */
 formEl.addEventListener("submit", taskFormHandler);
+
+var taskButtonHandler = function(event) {
+  console.log(event.target);
+
+  if (event.target.matches(".delete-btn")) {
+    // get the element's task id by getting HTML attribute "data-task-id"
+    var taskId = event.target.getAttribute("data-task-id");
+    console.log(taskId);
+  }
+};
+
+// event listener for page-content element at top
+pageContentEl.addEventListener("click", taskButtonHandler);
