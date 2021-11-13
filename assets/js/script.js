@@ -312,6 +312,28 @@ var saveTasks = function () {
   // JSON = JavaScript Object Notation = means of organizing and structuring data that's transferred from one place to another
 }
 
+// function to load tasks
+var loadTasks = function () {
+  // gets task items from localStorage
+  var savedTasks = localStorage.getItem("tasks");
+  console.log(localStorage.getItem("tasks"));
+
+  // check if tasks is equal to null by using an if statement
+  // If it is, set tasks back to an empty array be reassigning it to [] & adding a return false
+  if (!savedTasks) {
+    return false;
+  }
+  // else (if it's not null), load up on saved tasks
+
+  // converts tasks from the string format back into an array of objects
+
+
+  // Iterates through a tasks array and creates task elements on the page from it.
+
+}
+
 // event listener for page-content element at top
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+loadTasks();
