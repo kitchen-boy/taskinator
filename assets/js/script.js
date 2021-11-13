@@ -11,6 +11,9 @@ var tasksToDoEl = document.querySelector("#tasks-to-do");
 var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 
+// Task Array Variable
+var task = [];
+
 // function to dynamically create the task item
 var taskFormHandler = function(event) {
 
@@ -46,7 +49,8 @@ var taskFormHandler = function(event) {
     // package up data as an object
     var taskDataObj = {
       name: taskNameInput, 
-      type: taskTypeInput
+      type: taskTypeInput, 
+      status: "to do"
     };
   // createTaskEl will only get called if isEdit = false
   // if isEdit = true, new function completeEditTask() will be called, passing it 3 arguments: name input value, type input value, task id.
@@ -57,6 +61,7 @@ var taskFormHandler = function(event) {
 
 //function to create tasks as list item and to have an id for each task
 var createTaskEl = function(taskDataObj) {
+
   //create list item
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
@@ -78,12 +83,23 @@ var createTaskEl = function(taskDataObj) {
   // append taskActionsEl to listItemEl before listItem El is appended to the page
   listItemEl.appendChild(taskActionsEl);
 
-
   // add entire list item to list
   tasksToDoEl.appendChild(listItemEl);
 
+  // already have the value of taskDataObj id in the taskIdCounter variable
+  //add value of taskDataObj id as a property to the taskDataObj argument variable 
+  taskDataObj.id = taskIdCounter;
+
+  // add the entire object to the tasks array.
+  task.push(taskDataObj);
+
   // increase task counter for next unique id by one (to keep each id unique)
   taskIdCounter++;
+
+  // to ensure that status property in var TaskDataObj gets to createTaskEl()function via taskDataObj parameter  
+  console.log(taskDataObj);
+  console.log(taskDataObj.status);
+
 };
 
 //form elements (buttons & dropdowns) for tasks need to be dynamically created in JS, because tasks are dynamically created in JS.
