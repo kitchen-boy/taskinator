@@ -124,13 +124,22 @@ var createTaskActions = function(taskId) {
 formEl.addEventListener("submit", taskFormHandler);
 
 var taskButtonHandler = function(event) {
-  console.log(event.target);
-
+  
   if (event.target.matches(".delete-btn")) {
     // get the element's task id by getting HTML attribute "data-task-id"
+    //the "data-task-id" attribute was applied to both Delete button & task's <li> element
     var taskId = event.target.getAttribute("data-task-id");
-    console.log(taskId);
+    deleteTask(taskId);
   }
+};
+
+var deleteTask = function(taskId) {
+  // searching for <ll class="task-item" data-task-id="value of taskId">
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+  console.log(taskId);
+  console.log(taskSelected);
+  taskSelected.remove();
+
 };
 
 // event listener for page-content element at top
