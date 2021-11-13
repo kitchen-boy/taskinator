@@ -26,14 +26,29 @@ var taskFormHandler = function(event) {
   // to reset form after submitting task
   formEl.reset();
 
-  // package up data as an object
-  var taskDataObj = {
-    name: taskNameInput, 
-    type: taskTypeInput
-  };
-
+  // declaration to know if form element has attribute "data-task-id"
+  var isEdit = formEl.hasAttribute("data-task-id");
+  // console.log(isEdit);
+  // when submit form to create new task, isEdit wll be false, console.log will say false
+  // when form is submitted after editing, isEdit will be true, true will display in console
+  
+  // has data attribute, so get task id and call function to complete edit process
+  if (isEdit) {
+    var taskId = formEl.getAttribute("data-task-id");
+    completeEditTask(taskNameInput, taskTypeInput, taskId);
+  }
+  // no data attribute, so create object as normal and pass to createTaskEl function
+  else {
+    // package up data as an object
+    var taskDataObj = {
+      name: taskNameInput, 
+      type: taskTypeInput
+    };
+  // createTaskEl will only get called if isEdit = false
+  // if isEdit = true, new function completeEditTask() will be called, passing it 3 arguments: name input value, type input value, task id.
   // send it as an argument to createTaskEl
   createTaskEl(taskDataObj);
+  }
 };
 
 //function to create tasks as list item and to have an id for each task
@@ -148,23 +163,23 @@ var taskButtonHandler = function(event) {
 var deleteTask = function(taskId) {
   // searching for <li class="task-item" data-task-id="value of taskId">
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
-  console.log(taskId);
-  console.log(taskSelected);
+  //console.log(taskId);
+  //console.log(taskSelected);
   taskSelected.remove();
 };
 
 // edit Task function
 var editTask = function(taskId) {
-  console.log("editing task #" + taskId);
+  //console.log("editing task #" + taskId);
   // get task list item element aka <li class="task-item" data-task-id="value of taskId">
   var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
   // get content from task name and type
   var taskName = taskSelected.querySelector("h3.task-name").textContent;
-  console.log(taskName);
+  //console.log(taskName);
 
   var taskType = taskSelected.querySelector("span.task-type").textContent;
-  console.log(taskType);
+  //console.log(taskType);
 
   document.querySelector("input[name='task-name']").value = taskName;
   document.querySelector("select[name='task-type']").value = taskType;
@@ -174,8 +189,24 @@ var editTask = function(taskId) {
 
   // this will add the taskId to a data-task-id attribute on the form itself
   formEl.setAttribute("data-task-id", taskId);
-  console.log ("task-form");
+  //console.log ("task-form");
 };
 
+// completeEditTask() function
+var completeEditTask = function(taskName, taskType, taskId) {
+  //console.log(taskName, taskType, taskId);
+  // find the matching task list item
+  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+  //set new values
+  taskSelected.querySelector("h3.task-name").textContent = taskName;
+  taskSelected.querySelector("span.task-type").textContent = taskType;
+
+  alert("Task Updated!");
+
+  // reset form by removing taskid & changing button text back to normal
+  formEl.removeAttribute("data-task-id");
+  document.querySelector("#save-task").textContent = "Add Task";
+}
 // event listener for page-content element at top
 pageContentEl.addEventListener("click", taskButtonHandler);
