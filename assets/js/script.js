@@ -93,12 +93,15 @@ var createTaskEl = function(taskDataObj) {
   // add the entire object to the tasks array.
   tasks.push(taskDataObj);
 
+  // save tasks to localStorage
+  saveTasks();
+
   // increase task counter for next unique id by one (to keep each id unique)
   taskIdCounter++;
 
   // to ensure that status property in var TaskDataObj gets to createTaskEl()function via taskDataObj parameter  
-  console.log(taskDataObj);
-  console.log(taskDataObj.status);
+  //console.log(taskDataObj);
+  //console.log(taskDataObj.status);
 
 };
 
@@ -199,6 +202,9 @@ var deleteTask = function(taskId) {
   }
   // reassign task array to be the same as updatedTaskArr
   tasks = updatedTaskArr;
+
+  // save tasks to localStorage
+  saveTasks();
 };
 
 // edit Task function
@@ -247,6 +253,9 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
   alert("Task Updated!");
 
+  // save tasks to localStorage
+  saveTasks();
+
   // reset form by removing taskid & changing button text back to normal
   formEl.removeAttribute("data-task-id");
   document.querySelector("#save-task").textContent = "Add Task";
@@ -290,10 +299,18 @@ var taskStatusChangeHandler = function(event) {
     tasks[i].status = statusValue;
     }
   } 
-  console.log(tasks);
+  
+  // save tasks to localStorage
+  saveTasks();
 
 };
 
+// function to save tasks to localStorage everytime we add, update or delete any tasks.
+var saveTasks = function () {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  // used js tool stringify method to convert tasks array into a string, because localStorage can only store one type of data: strings
+  // JSON = JavaScript Object Notation = means of organizing and structuring data that's transferred from one place to another
+}
 
 // event listener for page-content element at top
 pageContentEl.addEventListener("click", taskButtonHandler);
