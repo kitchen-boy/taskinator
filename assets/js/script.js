@@ -12,9 +12,12 @@ var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 
 // Task Array Variable
+// this is an empty tasks array - when a new task is created,the object holding all of its data can be added to the array.
 var tasks = [];
 
-// function to dynamically create the task item
+// Originally part of createTaskHandler function, but refactored into 2 separate functions
+// This function is to handle the form submission, get the form values, & pass those values to the second function as arguments. 
+// function to dynamically create the task item, i.e. to add a form to the HTML document.
 var taskFormHandler = function(event) {
 
   event.preventDefault();
@@ -22,15 +25,19 @@ var taskFormHandler = function(event) {
 
   var taskNameInput = document.querySelector("input[name='task-name']").value;
   var taskTypeInput = document.querySelector("select[name='task-type']").value;
-  
-  // check if input values are empty strings
+  // to retrieve the form's values upon submission to access the submitted text in the input form
+  // i.e. retrieved data from a form element using its value property.
+
+  // check if input values are empty strings to prevent creating empty task items
   if (!taskNameInput || !taskTypeInput) {
     // When used in a condition, empty strings and the number 0 are evaluated as falsy values
-    // ! -> the "not" operator is used to check if taskNameInput variable is empty by asking if it's a falsy value.
+    // ! -> the "not" operator is used to check if taskNameInput variable is empty by asking if it's a falsy value. 4.2.8.
     alert("You need to fill out the task form!");
     return false;
   }
-  // to reset form after submitting task
+  // to reset form to default values after submitting task
+  // So don't have to erase previous task's content (each task name & task type) before filling out form & submitting a new task.
+  // Used reset() method on a form element.
   formEl.reset();
 
   // declaration to know if form element has attribute "data-task-id"
@@ -46,12 +53,15 @@ var taskFormHandler = function(event) {
   }
   // no data attribute, so create object as normal and pass to createTaskEl function
   else {
-    // package up data as an object
+
+    // package up data to be an object.
+    // instead of having to add another parameter to the function everytime we want to use more data, set up function to accept object as argument.
     var taskDataObj = {
       name: taskNameInput, 
       type: taskTypeInput, 
       status: "to do"
     };
+
   // createTaskEl will only get called if isEdit = false
   // if isEdit = true, new function completeEditTask() will be called, passing it 3 arguments: name input value, type input value, task id.
   // send it as an argument to createTaskEl
@@ -59,9 +69,12 @@ var taskFormHandler = function(event) {
   }
 };
 
+// originally part of createTaskHandler function, but refactored into 2 separate functions
+// This first function is to accept the form values as arguments & use them to create the new task item's HTML 
+// i.e. to hold the code that creates a new task HTML element. 
 //function to create tasks as list item and to have an id for each task
 var createTaskEl = function(taskDataObj) {
-
+//debugger
   //create list item
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
@@ -71,12 +84,16 @@ var createTaskEl = function(taskDataObj) {
 
   // create div to hold task info and add to list item
   var taskInfoEl = document.createElement("div")
+
   // give it a class name
   taskInfoEl.className = "task-info";
 
   // add HTML content to div
+  // in each <li>, each nested <div> has <h3> & <span> elements, i.e. set data into the <div>
   taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
+  //used DOM element property, innerHTML, to write HTML code instead of simple text.
   listItemEl.appendChild(taskInfoEl);
+  // appended data to the <li>
 
   // to add edit, delete, select options to listed tasks, using taskIdCounter to create buttons that correspond to current task id. 
   var taskActionsEl = createTaskActions(taskIdCounter);
@@ -84,13 +101,22 @@ var createTaskEl = function(taskDataObj) {
   listItemEl.appendChild(taskActionsEl);
 
   // add entire list item to list
-  tasksToDoEl.appendChild(listItemEl);
+  if (taskDataObj.status === "to do") {
+    tasksToDoEl.appendChild(listItemEl);
+  };
+  if (taskDataObj.status === "in progress") {
+    tasksInProgressEl.appendChild(listItemEl);
+  };
+  if (taskDataObj.status === "completed") {
+    tasksCompletedEl.appendChild(listItemEl);
+  };
 
   // already have the value of taskDataObj id in the taskIdCounter variable
-  //add value of taskDataObj id as a property to the taskDataObj argument variable 
+  //added value of taskDataObj id as a property to the taskDataObj argument variable 
   taskDataObj.id = taskIdCounter;
 
   // add the entire object to the tasks array.
+  // using array method called push() - this method adds any content between the parentheses to the end of the specified array.
   tasks.push(taskDataObj);
 
   // save tasks to localStorage
@@ -159,7 +185,9 @@ var createTaskActions = function(taskId) {
 
 };
 /* an event listener statment = "on submit, create a task" targeting the form element */
+// submitting forms using the submit event listener.
 formEl.addEventListener("submit", taskFormHandler);
+
 
 var taskButtonHandler = function(event) {
   
@@ -243,12 +271,17 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
   // loop through tasks array and task object with new content
   // completeEditTask() function to update task array
-  // .debugger
+  //debugger
   for (var i = 0; i <tasks.length; i ++) {
+    //at each iteration of this for loop, checking to see if individual task's id property matches the taskId argument that was passed into completeEditTask().
     if (tasks[i].id === parseInt(taskId)) {
+      //tasks[i].id = number, taskId = string, so wrapped taskId with parseInt() function & convert it to a number for comparison.
       tasks[i].name = taskName;
       tasks[i].type = taskType;
+      // if the 2 id values match, then confirmed task at that iteration of the for loop is the one we want to update.
+      // then reassigned that task's name & type property to the new content submitted by the form when we finished editing it. 
     }
+  //debugger
   }
 
   alert("Task Updated!");
@@ -299,7 +332,7 @@ var taskStatusChangeHandler = function(event) {
     tasks[i].status = statusValue;
     }
   } 
-  
+  console.log(tasks);
   // save tasks to localStorage
   saveTasks();
 
@@ -314,23 +347,36 @@ var saveTasks = function () {
 
 // function to load tasks
 var loadTasks = function () {
-  // gets task items from localStorage
+  //debugger
+  // retreive task items from localStorage
   var savedTasks = localStorage.getItem("tasks");
+  // test the task retrieval
   console.log(localStorage.getItem("tasks"));
-
+  // if nothing returns from localStorage, tasks === null
   // check if tasks is equal to null by using an if statement
-  // If it is, set tasks back to an empty array be reassigning it to [] & adding a return false
+  // If it is, set tasks back to an empty array by reassigning it to [] & adding a return false
   if (!savedTasks) {
     return false;
   }
+  console.log("Saved tasks found!");
+
   // else (if it's not null), load up on saved tasks
 
   // converts tasks from the string format back into an array of objects
+  savedTasks = JSON.parse(savedTasks);
+  console.log(savedTasks);
 
-
+  //Print task items to the page
   // Iterates through a tasks array and creates task elements on the page from it.
-
-}
+  for (var i = 0; i < savedTasks.length; i++) {
+    //pass each task object into the 'createTaskEl()' function
+    createTaskEl(savedTasks[i]);
+    
+    // test <for> loop to 
+    console.log(tasks[i]);
+    //
+  }
+};
 
 // event listener for page-content element at top
 pageContentEl.addEventListener("click", taskButtonHandler);
